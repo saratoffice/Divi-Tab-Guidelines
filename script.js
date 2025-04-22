@@ -1,68 +1,43 @@
-// Host this JS file on GitHub CDN
-(function() {
-  'use strict';
-  
-  function initCSVTables() {
-    const csvUrl = "YOUR_CSV_URL_HERE";
-    
-    function createTable(targetId, category) {
-      fetch(csvUrl)
-        .then(res => res.text())
-        .then(csv => {
-          const data = Papa.parse(csv, { header: true }).data;
-          const container = document.getElementById(targetId);
-          
-          if (!container) return;
-          
-          const filtered = data.filter(row => row.Category === category);
-          const html = `
-            <div class="custom-csv-table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>S.No.</th>
-                    <th>Subject</th>
-                    <th>Download</th>
-                    <th>Share</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${filtered.map((row, i) => `
-                    <tr class="custom-csv-table-row">
+document.addEventListener("DOMContentLoaded", function () {
+    const csvUrl = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
+
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(csvText => {
+        const parsed = Papa.parse(csvText, { header: false });
+        const rows = parsed.data.slice(1); // skip header
+
+        document.querySelectorAll(".csv-tab-container").forEach(container => {
+          const category = container.getAttribute("data-category");
+          const tableBody = rows.filter(row => row[1] === category);
+          const tableHTML = `
+            <table class="csv-table">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Subject</th>
+                  <th>Download</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableBody.map((row, i) => {
+                  const subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf/i, "");
+                  const link = row[5];
+                  return `
+                    <tr>
                       <td>${i + 1}</td>
-                      <td>${row.Subject.replace(/_/g, ' ').replace(/\.pdf$/i, '')}</td>
-                      <td>
-                        <a href="${row.Download}" target="_blank" class="custom-download-btn">
-                          Download
-                        </a>
-                      </td>
-                      <td>
-                        <a href="${row.Share}" target="_blank" class="custom-share-btn">
-                          Share
-                        </a>
-                      </td>
+                      <td>${subject}</td>
+                      <td><a href="${link}" target="_blank"><button class="download-btn">Download</button></a></td>
+                      <td><a href="https://wa.me/?text=${encodeURIComponent("📄 " + subject + "\n🔗 " + link)}" target="_blank"><button class="share-btn">Share</button></a></td>
                     </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
           `;
-          
-          container.innerHTML = html;
+          container.querySelector(".csv-table-placeholder").innerHTML = tableHTML;
         });
-    }
-    
-    // Initialize tables when tabs are clicked
-    document.querySelectorAll('.et_pb_tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-toggle-target');
-        const category = this.dataset.category;
-        if (targetId && category) {
-          createTable(targetId, category);
-        }
-      });
-    });
-  }
-  
-  document.addEventListener('DOMContentLoaded', initCSVTables);
-})();
+      })
+      .catch(err => console.error("CSV Load Error:", err));
+  });
