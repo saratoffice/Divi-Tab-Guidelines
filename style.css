@@ -1,0 +1,73 @@
+/* Custom CSV Table Styles - Host on GitHub */
+.custom-csv-table-container {
+  overflow-x: auto;
+  padding: 20px 0;
+  margin: 15px 0;
+}
+
+.custom-csv-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  background: #fff;
+}
+
+.custom-csv-table-container thead {
+  background: #101535 !important;
+  border-radius: 5px;
+}
+
+.custom-csv-table-container th {
+  color: #fff !important;
+  padding: 12px 15px !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+
+.custom-csv-table-container td {
+  padding: 12px 15px !important;
+  border: 1px solid #e6e6e6 !important;
+  vertical-align: middle !important;
+}
+
+.custom-csv-table-row:hover {
+  background: #f8fff0 !important;
+}
+
+.custom-download-btn,
+.custom-share-btn {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none !important;
+  cursor: pointer;
+}
+
+.custom-download-btn {
+  background: #4CAF50 !important;
+  color: #fff !important;
+}
+
+.custom-download-btn:hover {
+  background: #43a047 !important;
+  transform: translateY(-1px);
+}
+
+.custom-share-btn {
+  background: #007BFF !important;
+  color: #fff !important;
+}
+
+.custom-share-btn:hover {
+  background: #0069d9 !important;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .custom-csv-table-container {
+    margin: 0 -10px;
+    width: calc(100% + 20px);
+  }
+}
